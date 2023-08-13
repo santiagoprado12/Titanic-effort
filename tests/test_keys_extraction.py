@@ -13,9 +13,9 @@ def test_get_secret_key_input(monkeypatch):
     assert key_extract.secret_key == "input_string"
 
 
-def test_get_secret_key_env_var():
+def test_get_secret_key_env_var(monkeypatch):
 
-    os.environ["SECRET_KEY"] = "env_variable"
+    monkeypatch.setenv("SECRET_KEY", "env_variable")
     key_extract = KeysExtraction()
 
     assert key_extract.secret_key == "env_variable"
@@ -47,5 +47,25 @@ def test_get_decrypt_file(tmpdir):
     decrypted_keys = key_extract.decrypt_file()
 
     TestCase().assertDictEqual(decrypted_keys, keys)
+
+
+def test_set_env_variables(monkeypatch):
+    
+    test_keys = {
+        "access_key": "test_access_key",
+        "secret_key": "test_secret_key",
+    }
+
+    monkeypatch.setattr(KeysExtraction, 'decrypt_file', lambda _: test_keys)
+    monkeypatch.setattr(KeysExtraction, 'get_secret_key', lambda _: None)
+
+    key_extract = KeysExtraction()
+    key_extract.set_env_variables()
+
+    assert "access_key" in os.environ  #var exists
+    assert "secret_key" in os.environ
+    assert os.environ["access_key"] == "test_access_key" #var has the correct value
+    assert os.environ["secret_key"] == "test_secret_key"
+
 
 
