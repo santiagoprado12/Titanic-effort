@@ -7,7 +7,7 @@ from cryptography.fernet import Fernet
 
 class KeysExtraction:
     """
-    This class is used to create a session with AWS services.
+    This class is used to decrypt the aws keys from the encrypted_keys.txt file.
     """
 
     def __init__(self, path:str = "encrypted_keys.txt"):
@@ -31,9 +31,15 @@ class KeysExtraction:
 
         cipher_suite = Fernet(str.encode(self.secret_key))
         decrypted_data = cipher_suite.decrypt(encrypted_data)
-        decrypted_json_data = json.loads(decrypted_data.decode())
+        self.decrypted_json_data = json.loads(decrypted_data.decode())
 
-        return decrypted_json_data
+        return self.decrypted_json_data
+    
+    def set_env_variables(self):
+        
+        keys = self.decrypt_file()
+        for key, value in keys.items():
+            os.environ[key] = value
     
 
 
