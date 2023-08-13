@@ -1,4 +1,6 @@
 [core]
-    remote = data_remote
+    remote = model_remote
 ['remote "data_remote"']
     url = s3://dvc-mle-test/data/
+['remote "model_remote"']
+    url = s3://dvc-mle-test/model/
