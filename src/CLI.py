@@ -8,6 +8,7 @@ from src.utils.utils import run_makefile
 
 app = typer.Typer() # Create a new typer.Typer() application.
 
+
 class ModelType(str, Enum):
     random_forest = "random_forest"
     gradient_boosting = "gradient_boosting"
