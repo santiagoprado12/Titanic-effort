@@ -19,9 +19,12 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
           threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for the model to be registered (between 0 and 1))")):
     """Train the model"""
 
+    
     if threshold is None:
+        run_makefile("dvc-pull")
         train_model.main([mod.value for mod in model])
     elif 0 <= threshold <= 1:
+        run_makefile("dvc-pull")
         train_model.main([mod.value for mod in model], threshold)
     else:
         typer.echo("Invalid input. Please enter a float number between 0 and 1.")
