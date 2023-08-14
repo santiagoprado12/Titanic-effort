@@ -8,13 +8,10 @@ from src.utils.utils import run_makefile
 
 app = typer.Typer() # Create a new typer.Typer() application.
 
-
-
 class ModelType(str, Enum):
     random_forest = "random_forest"
     gradient_boosting = "gradient_boosting"
     knn = "knn"
-
 
 @app.command()
 def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "--model", help="model to train")],
@@ -32,7 +29,6 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
     if register:
         KeysExtraction().set_env_variables()
         run_makefile("register_model")
-        
 
 @app.command()
 def main(user: Annotated[Optional[List[str]], typer.Option()] = None):
