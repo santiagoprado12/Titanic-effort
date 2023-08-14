@@ -32,7 +32,7 @@ def preprocess_data(data: pd.DataFrame) -> pd.DataFrame:
     return titanic_data
 
 
-if __name__ == "__main__":
+def main(models_to_use: list = ["random_forest", "gradient_boosting", "knn"], acc_threshold: float = 0.7) -> None:
 
     RANDOM_SEED = 42
 
@@ -42,8 +42,6 @@ if __name__ == "__main__":
         'numeric_features': ['Parch', 'Pclass', 'SibSp', 'Fare', 'Age'],
         'categorical_features': ['Embarked', 'FamilySize']
     }
-
-    models_to_use = ["random_forest", "gradient_boosting", "knn"]
 
     logger.info("Loading data")
     
@@ -59,18 +57,22 @@ if __name__ == "__main__":
     logger.info("Training models")
     
     model_train = ModelTraining(X_train, y_train, atributes_types, models_to_use)
-    models_trained = model_train.train_models()
+    model_train.train_models()
 
     scores = model_train.generate_scores(X_test, y_test)
-
     logger.info(f"Scores: {scores}")
+
     best_model_name = model_train.best_model(X_test, y_test)
-
     logger.info(f"Best model: {best_model_name}")
-    best_model = models_trained[best_model_name]
 
-    assert scores[best_model_name] > 0.7, "The best model is not good enough, try with different hyperparams"
+    assert scores[best_model_name] > acc_threshold, "The best model is not good enough, try with different hyperparams"
 
     logger.info("Saving model")
     model_train.save_model(best_model_name, "models/best_model.pkl")
+
+
+if __name__ == "__main__":
+    main()
+
+
 
