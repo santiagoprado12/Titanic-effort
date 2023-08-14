@@ -20,18 +20,29 @@ coverage-html: test
 coverage-report: test
 	. $(VENV)/bin/activate && python3 -m coverage report
 
-dvc-pull-data:
-	dvc pull -r data_remote --force
-
-dvc-pull-model:
-	dvc pull -r model_remote --force
+dvc-pull:
+	dvc pull
 
 train:
-	make dvc-pull-data
-	make dvc-pull-model
-	python3 -m src.ml-core.train
+	make dvc-pull
+	python3 -m src.ml_core.train
+
+train-creds:
+	python -m src.test
+
+upload_new_dataset:
+	dvc unprotect 'data/validation.csv'
+	dvc unprotect 'data/train.csv'
+	dvc add 'data/validation.csv' --to-remote -r data_remote
+	dvc add 'data/train.csv' --to-remote -r data_remote
+
+register_model:
 	dvc unprotect 'models/best_model.pkl'
 	dvc add 'models/best_model.pkl' --to-remote -r model_remote
 	dvc push models/best_model.pkl.dvc -r model_remote
 
-	
+upload_new_dataset-creds: 
+	python -m src.test
+
+dummy:
+	@echo "Doing nothing"
