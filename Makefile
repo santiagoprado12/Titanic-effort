@@ -20,8 +20,11 @@ coverage-html: test
 coverage-report: test
 	. $(VENV)/bin/activate && python3 -m coverage report
 
-dvc-pull:
-	dvc pull
+dvc-pull-data:
+	dvc pull -r data_remote
+
+dvc-pull-model:
+	dvc pull -r model_remote
 
 train:
 	make dvc-pull

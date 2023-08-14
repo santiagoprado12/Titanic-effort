@@ -23,11 +23,11 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
     
     if threshold is None:
         KeysExtraction().set_env_variables()
-        run_makefile("dvc-pull")
+        run_makefile("dvc-pull-data")
         train_model.main([mod.value for mod in model])
     elif 0 <= threshold <= 1:
         KeysExtraction().set_env_variables()
-        run_makefile("dvc-pull")
+        run_makefile("dvc-pull-data")
         train_model.main([mod.value for mod in model], threshold)
     else:
         typer.echo("Invalid input. Please enter a float number between 0 and 1.")
