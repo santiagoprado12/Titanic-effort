@@ -1,0 +1,21 @@
+name: Continuous Integration and Continuous Deployment
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["Continuous Integration and Continuous Deployment"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  ci_cd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: make install
+      - name: Run tests
+        run: python3 -m src.CLI test -c
