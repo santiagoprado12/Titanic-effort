@@ -42,18 +42,23 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
 
 
 @app.command()
-def validation():
+def validation(threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for retrain the model (between 0 and 1))")):
     """Validate the model"""
 
     KeysExtraction().set_env_variables()
     run_makefile("dvc-pull-data")
     run_makefile("dvc-pull-model")
-    score = validation_model.main()
+    score = validation_model.validate()
 
-    if score < 0.7:
-        typer.echo("The model is not good enough. training a new model.")
+    if threshold is not None:
 
-    run_makefile("register_model")
+        if 0 <= threshold <= 1:
+            if score < threshold:
+                typer.echo("The model is not good enough. training a new model.")
+                run_makefile("train-model")
+        else:
+            typer.echo("Invalid input. Please enter a float number between 0 and 1.")
+            raise typer.Abort()
 
 
 @app.command()
