@@ -6,14 +6,18 @@ import src.ml_core.train as train_model
 from src.utils.keys_extraction import KeysExtraction
 from src.utils.utils import run_makefile
 import src.ml_core.validation as validation_model
+import os
+from src.configs import Configs
 
-app = typer.Typer() # Create a new typer.Typer() application.
+app = typer.Typer()  # Create a new typer.Typer() application.
 
 
-class ModelType(str, Enum):
-    random_forest = "random_forest"
-    gradient_boosting = "gradient_boosting"
-    knn = "knn"
+def create_enum(enum_name, values):
+    return Enum(enum_name, {value: value for value in values})
+
+model_type_list = [model["name"] for model in Configs().models]
+ModelType = create_enum("ModelType", model_type_list)
+
 
 @app.command()
 def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "--model", help="model to train")],
@@ -24,11 +28,11 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
     if threshold is None:
         KeysExtraction().set_env_variables()
         run_makefile("dvc-pull-data")
-        train_model.main([mod.value for mod in model])
+        train_model.train([mod.value for mod in model])
     elif 0 <= threshold <= 1:
         KeysExtraction().set_env_variables()
         run_makefile("dvc-pull-data")
-        train_model.main([mod.value for mod in model], threshold)
+        train_model.train([mod.value for mod in model], threshold)
     else:
         typer.echo("Invalid input. Please enter a float number between 0 and 1.")
         raise typer.Abort()
@@ -44,25 +48,42 @@ def validation():
     KeysExtraction().set_env_variables()
     run_makefile("dvc-pull-data")
     run_makefile("dvc-pull-model")
-    validation_model.main()
+    score = validation_model.main()
+
+    if score < 0.7:
+        typer.echo("The model is not good enough. training a new model.")
+
+    run_makefile("register_model")
 
 
 @app.command()
 def dataup(only_train: bool = typer.Option(False, "--only-train", "-t", help="only register the train data"),
-            only_validation: bool = typer.Option(False, "--only-validation", "-v", help="only register the validation data")):
-    """Update the data in the registry"""
+           only_validation: bool = typer.Option(False, "--only-validation", "-v", help="only register the validation data")):
+    """Update the data in the registry""" 
 
     if only_train:
-        KeysExtraction().set_env_variables()
-        run_makefile("dvc-push-train-data")
-    
+        if os.path.exists("data/train.csv"):
+            KeysExtraction().set_env_variables()
+            run_makefile("dvc-push-train-data")
+        else:
+            typer.echo("The train data does not exist. Please save the train (train.csv) data in the data folder and try again.")
+            raise typer.Abort()
+
     elif only_validation:
-        KeysExtraction().set_env_variables()
-        run_makefile("dvc-push-validation-data")
-    
+        if os.path.exists("data/validation.csv"):
+            KeysExtraction().set_env_variables()
+            run_makefile("dvc-push-validation-data")
+        else:
+            typer.echo("The validation data does not exist. Please save the validation (validation.csv) data in the data folder and try again.")
+            raise typer.Abort()
+
     else:
-        KeysExtraction().set_env_variables()
-        run_makefile("dvc-push-data")
+        if os.path.exists("data/train.csv") and os.path.exists("data/validation.csv"):
+            KeysExtraction().set_env_variables()
+            run_makefile("dvc-push-data")
+        else:
+            typer.echo("The train or validation data does not exist. Please save the train (train.csv) and validation (validation.csv) data in the data folder and try again.")
+            raise typer.Abort()
 
 
 @app.command()
