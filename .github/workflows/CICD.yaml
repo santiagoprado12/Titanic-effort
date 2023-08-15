@@ -11,6 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: make install && source .venv/bin/activate
+        run: make install
       - name: Run tests
-        run: python3 -m src.CLI test -c
+        run: . venv/bin/activate &&  python3 -m src.CLI test -c
