@@ -46,11 +46,8 @@ dvc-push-data:
 
 train:
 	make dvc-pull
-	python3 -m src.ml_core.train
-
-train-creds:
-	python -m src.test
-
+	python3 -m src.CLI train --model=knn --model=random_forest --model=gradient_boosting -th=0.7 -rm
+	
 upload_new_dataset:
 	dvc unprotect 'data/validation.csv'
 	dvc unprotect 'data/train.csv'
