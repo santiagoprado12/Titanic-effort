@@ -3,11 +3,6 @@ on:
   push:
     branches:
       - main
-  workflow_run:
-    workflows: ["Continuous Integration and Continuous Deployment"]
-    branches: [main]
-    types:
-      - completed
 
 jobs:
   ci_cd:
@@ -16,6 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: make install
+        run: make install && source .venv/bin/activate
       - name: Run tests
         run: python3 -m src.CLI test -c
