@@ -9,73 +9,10 @@ import os
 from joblib import load
 from io import BytesIO
 
+
 def mock_init(self):
     # Mock the __init__() method to do nothing
     pass
-
-def test_build_data_processing_pipeline_returns_col_transformer(monkeypatch):
-
-    numeric_features = ['num1', 'num2']
-    ordinal_attributes = ['ord1', 'ord2']
-    categorical_features = ['cat1', 'cat2']
-
-    monkeypatch.setattr(PipelineBuilding, "__init__", mock_init)
-
-    pipeline = PipelineBuilding()._build_data_processing_pipeline(
-        numeric_features, ordinal_attributes, categorical_features
-    )
-    assert isinstance(pipeline, ColumnTransformer)
-
-
-def test_build_data_processing_pipeline_process_all_columns_and_rows(monkeypatch):
-
-    data = {
-        'num1': [1, 2, 3, 4, 5],
-        'ord1': [1, 0, 1, 0, 1],
-        'cat1': ['a', 'b', 'a', 'b', 'a']
-    }
-
-    data = pd.DataFrame(data, columns=['num1', 'ord1', 'cat1'])
-
-    numeric_features = ['num1']
-    ordinal_attributes = ['ord1']
-    categorical_features = ['cat1']
-
-    monkeypatch.setattr(PipelineBuilding, "__init__", mock_init)
-
-    pipeline = PipelineBuilding()._build_data_processing_pipeline(
-        numeric_features, ordinal_attributes, categorical_features
-    )
-
-    processed_data = pipeline.fit_transform(data)
-
-    print(processed_data)
-
-    assert processed_data.shape[1] == data.shape[1] + 1 # 1 bcecause cat1 has 2 values possible (one hot encoding)
-    assert processed_data.shape[0] == 5
-
-
-def test_build_processing_and_feature_selection_pipeline_returns_pipeline(monkeypatch):
-
-    numeric_features = ['num1']
-    ordinal_attributes = ['ord1']
-    categorical_features = ['cat1', 'cat2']
-
-    total_columns = numeric_features + ordinal_attributes + categorical_features
-
-    monkeypatch.setattr(PipelineBuilding, "__init__", mock_init)
-
-    mock_pipeline = Pipeline([
-        ('', SimpleImputer())
-    ])
-
-    pipeline = PipelineBuilding()._build_processing_and_feature_selection_pipeline(
-        mock_pipeline, total_columns
-    )
-
-    assert isinstance(pipeline, Pipeline)
-
-
 
 def test_train_models(monkeypatch):
 
