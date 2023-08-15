@@ -15,6 +15,8 @@ def validate():
         score (float): The score of the model on the validation data set
     """
 
+    validation_report = 'validation_report.md'
+
     logger.info('Loading data')
     X, y = load_data('data/validation.csv')
 
@@ -25,6 +27,11 @@ def validate():
     score = model.score(X, y)
 
     logger.info('The model has a score of %s on validation data', score)
+
+    generate_validation_report(model, X, y)
+
+    logger.info('Validation report generated in %s', validation_report)
+
 
     return score
 
