@@ -21,10 +21,10 @@ coverage-report:
 	. $(VENV)/bin/activate && python3 -m coverage report
 
 dvc-pull-data:
-	dvc pull -r data_remote --force
+	dvc pull -r data_remote
 
 dvc-pull-model:
-	dvc pull -r model_remote --force
+	dvc pull -r model_remote
 
 dvc-push-train-data:
 	dvc unprotect 'data/train.csv'
