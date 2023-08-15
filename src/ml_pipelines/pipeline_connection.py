@@ -20,19 +20,44 @@ from sklearn.model_selection import RandomizedSearchCV
 # custom pipelines
 from src.ml_pipelines.feature_selection import FeatureSelection
 
+# configs
+from src.configs import Configs
 
-class PipelineBuilding:
 
-    def __init__(self, X:pd.DataFrame, y:pd.DataFrame, atributes_types:dict) -> None:
+class PipelineBuilding(Configs):
+    """Builds the full pipeline for the models to be trained.
+
+    Args:
+        X (pd.DataFrame): Dataframe with the features.
+        y (pd.DataFrame): Dataframe with the target.
+        atributes_types (dict): Dictionary with the types of the features.
+    """
+
+    def __init__(self, X: pd.DataFrame, y: pd.DataFrame, atributes_types: dict) -> None:
+        """Initializes the class.
+        
+        Args:
+            X (pd.DataFrame): Dataframe with the features.
+            y (pd.DataFrame): Dataframe with the target.
+            atributes_types (dict): Dictionary with the types of the features.
+        """
 
         self.X = X
         self.y = y
         self.atributes_types = atributes_types
-        cat_columns = self._columns_after_processing(X, atributes_types["categorical_features"])
-        self.all_columns = atributes_types["numeric_features"] + atributes_types["ordinal_attributes"] + cat_columns
+        cat_columns = self._columns_after_processing(
+            X, atributes_types["categorical_features"])
+        self.all_columns = atributes_types["numeric_features"] + \
+            atributes_types["ordinal_attributes"] + cat_columns
 
-
-    def _columns_after_processing(self, titanic_data: pd.DataFrame, categorical_features: list):
+    def _columns_after_processing(self, titanic_data: pd.DataFrame, categorical_features: list) -> list:
+        """After the one hot encoding, the categorical features are transformed into multiple columns.
+        This function returns the names of the new columns.
+        
+        Args:
+            titanic_data (pd.DataFrame): Dataframe with the features.
+            categorical_features (list): List with the categorical features.
+        """
 
         categorical_features_columns = []
 
@@ -41,26 +66,39 @@ class PipelineBuilding:
                 categorical_features_columns.extend([col + str(x)])
 
         return categorical_features_columns
-    
 
-    def build_full_pipeline(self):
+    def build_full_pipeline(self) -> dict:
+        """Builds the full pipeline for the models to be trained.
+        
+        Returns:
+            dict: Dictionary with the full pipeline for each model."""
+
 
         atributes_types = self.atributes_types
 
         processing_feature_selection_pipeline = self._build_data_processing_pipeline(
-        atributes_types["numeric_features"], atributes_types["ordinal_attributes"], 
-        atributes_types["categorical_features"])
+            atributes_types["numeric_features"], atributes_types["ordinal_attributes"],
+            atributes_types["categorical_features"])
 
         proc_and_feat_select_pipeline = self._build_processing_and_feature_selection_pipeline(
             processing_feature_selection_pipeline, self.all_columns)
-        
+
         models_pipelines = self._build_create_model_pipeline(
             proc_and_feat_select_pipeline)
-            
+
         return models_pipelines
-    
 
     def _build_data_processing_pipeline(self, numeric_features: list, ordinal_attributes: list, categorical_features: list) -> Pipeline:
+        """Builds the pipeline for the data processing.
+
+        Args:
+            numeric_features (list): List with the numeric features.
+            ordinal_attributes (list): List with the ordinal features.
+            categorical_features (list): List with the categorical features.
+
+        Returns:
+            Pipeline: Pipeline for the data processing.
+        """
 
         num_processing_pipeline = Pipeline([
             ('imputer', SimpleImputer(strategy="median")),
@@ -76,13 +114,21 @@ class PipelineBuilding:
             ("num", num_processing_pipeline, numeric_features),
             ("ord", OrdinalEncoder(), ordinal_attributes),
             ("cat", cat_processing_pipeline,
-            categorical_features),
+             categorical_features),
         ])
 
         return data_processing_pipeline
 
-
     def _build_processing_and_feature_selection_pipeline(self, data_processing_pipeline: Pipeline, new_columns: list) -> Pipeline:
+        """Builds the pipeline for the data processing and feature selection.
+
+        Args:
+            data_processing_pipeline (Pipeline): Pipeline for the data processing.
+            new_columns (list): List with the new columns after the one hot encoding.
+
+        Returns:
+            Pipeline: Pipeline for the data processing and feature selection.
+        """
 
         processing_feature_selection_pipeline = Pipeline([
             ("data_processing", data_processing_pipeline),
@@ -92,68 +138,35 @@ class PipelineBuilding:
 
         return processing_feature_selection_pipeline
 
-
     def _build_create_model_pipeline(self, processing_feature_selection_pipeline: Pipeline) -> dict:
+        """Builds the pipeline for the data processing and feature selection.
 
-        param_grid_rf = {
-            'n_estimators': [100, 200, 300],
-            'max_depth': [None, 10, 20],
-            'min_samples_split': [2, 5, 10],
-            'min_samples_leaf': [1, 2, 4],
-            'max_features': ['sqrt', 'log2'],
-            'bootstrap': [True, False],
-            'random_state': [42]
-        }
+        Args:
+            processing_feature_selection_pipeline (Pipeline): Pipeline for the data processing and feature selection.
 
-        param_grid_gb = {
-            'n_estimators': [100, 200, 300],
-            'learning_rate': [0.01, 0.1, 0.2],
-            'max_depth': [3, 4, 5],
-            'min_samples_split': [2, 3, 4],
-            'min_samples_leaf': [1, 2, 3],
-            'subsample': [0.8, 0.9, 1.0],
-            'random_state': [42]
-        }
+        Returns:
+            dict: Dictionary with the full pipeline for each model.
+        """
 
-        param_grid_knn = {
-            'n_neighbors': np.arange(1, 21),
-            'weights': ['uniform', 'distance'],
-            'metric': ['euclidean', 'manhattan']
-        }
+        training_pipelines = {}
 
-        rf_random_search = RandomizedSearchCV(RandomForestClassifier(),
-                                            param_distributions=param_grid_rf, n_iter=15, 
-                                            cv=5, verbose=0, random_state=42, n_jobs=-1)
-        gb_random_search = RandomizedSearchCV(GradientBoostingClassifier(),
-                                            param_distributions=param_grid_gb, n_iter=15, 
-                                            cv=5, verbose=0, random_state=42, n_jobs=-1)
-        knn_random_search = RandomizedSearchCV(KNeighborsClassifier(),
-                                            param_distributions=param_grid_knn, n_iter=15, 
-                                            cv=5, verbose=0, random_state=42, n_jobs=-1)
+        for model in self.models:
 
-        full_pipeline_rf = Pipeline([
-            ('preparation', processing_feature_selection_pipeline),
-            ('model', rf_random_search)
-        ])
+            seach_tecnique = self.search_tecnique["technique"]
+            seach_params = self.search_tecnique["params"]
 
-        full_pipeline_gb = Pipeline([
-            ('preparation', processing_feature_selection_pipeline),
-            ('model', gb_random_search)
-        ])
+            name = model["name"]
+            params = model["params"]
+            model = model["model"]
 
-        full_pipeline_knn = Pipeline([
-            ('preparation', processing_feature_selection_pipeline),
-            ('model', knn_random_search)
-        ])
+            random_seach = seach_tecnique(model, params, **seach_params)
 
-        return {"random_forest": full_pipeline_rf,
-                "gradient_boosting": full_pipeline_gb, 
-                "knn": full_pipeline_knn}
+            full_pipeline = Pipeline([
+                ('preparation', processing_feature_selection_pipeline),
+                ('model', random_seach)
+            ])
+
+            training_pipelines[name] = full_pipeline
+
+        return training_pipelines  
     
-
-
-    
-
-
-    
-
