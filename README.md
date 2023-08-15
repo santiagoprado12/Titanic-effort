@@ -130,7 +130,7 @@ python3 -m src.CLI --help
     make install && source .venv/bin/activate
     ```
 
-4. set and environment variable for your secret key (optional):
+4. set the environment variable for your secret key (optional):
 
     ```bash
     export SECRET_KEY=<your_secret_key>
