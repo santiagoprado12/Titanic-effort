@@ -50,11 +50,25 @@ I utilize DVC (Data Version Control) for managing dataset and model versions. Th
 
 I provide a Jupyter Notebook for the training process. You can access it [here](https://nbviewer.org/github/santiagoprado12/Titanic-effort/blob/dev/notebooks/preprocessing.ipynb).
 
-Files and their use:
+###  Relevant Directories and Files:
 
-- `src/analysis.py`: Contains functions for exploratory data analysis and preprocessing.
-- `src/training.py`: Implements the model training pipeline.
-- `src/validation.py`: Handles model validation and evaluation.
+- `.github/workflows/`: Contains the GitHub Actions workflows for CI/CD, continuous validation and training.
+
+- `data/`: Contains the dvc files used to track the data versions, the data is stored in the cloud using DVC and AWS S3.
+- `models/`: Contains the dvc files used to track the model versions, the models are stored in the cloud using DVC and AWS S3.
+
+
+- `notebooks/`: Contains the jupyter notebook used to preprocess the data and train the models.
+
+
+- `src/ml_pipelines`: Contains functions and classes to create the preprocessing, feature seleccion and training pipelines.
+- `src/ml_core`: contains valdiation and train files, with simple functions to train and validate the model, this fuinctions are called from the CLI.
+- `src/utils`: contains functions to decrypt keys from the data, simple data processing and reports generation.
+
+- `src/CLI.py`: Contains the CLI built using Typer.
+- `src/configs.py`: Contains the configuration parameters for the training process.
+
+
 
 ## CLI Overview
 
@@ -136,7 +150,7 @@ python3 -m src.CLI --help
     export SECRET_KEY=<your_secret_key>
     ```
 
-### Train and Validate a Models
+### Train and Validate Models
 
 
 1. Training a Model:
@@ -178,6 +192,9 @@ Now you can train and validate the model with the new data using the commands de
     ```bash
     python3 -m src.CLI test -c
     ```
+
+
+
 
 Made with ❤️ and a **titanic-effort** by Santiago Prado
 
