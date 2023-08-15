@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.pipelines.feature_selection import FeatureSelection
+from src.ml_pipelines.feature_selection import FeatureSelection
 from sklearn.model_selection import train_test_split
 from unittest.mock import patch
 

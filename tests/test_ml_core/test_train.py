@@ -4,6 +4,7 @@ import pandas as pd
 
 @patch('pandas.read_csv')
 def test_load_data(mock_read_csv):
+    
     # Define the mocked return value for pd.read_csv
     mock_read_csv.return_value = pd.DataFrame({
         'column1': [1, 2, 3],
@@ -24,6 +25,7 @@ def test_load_data(mock_read_csv):
 
 
 def test_preprocess_data():
+
     # Define the mocked input DataFrame
     input_data = pd.DataFrame({
         'PassengerId': [1, 2, 3],
@@ -31,20 +33,23 @@ def test_preprocess_data():
         'Cabin': ['A123', 'B456', 'C789'],
         'Ticket': ['T123', 'T456', 'T789'],
         'SibSp': [0, 1, 2],
-        'Parch': [0, 0, 1]
+        'Parch': [0, 0, 1],
+        'target': [0, 1, 0]
     })
 
     # Define the expected output DataFrame after preprocessing
-    expected_output = pd.DataFrame({
+    expected_output_X = pd.DataFrame({
         'SibSp': [0, 1, 2],
         'Parch': [0, 0, 1],
         'FamilySize': [0, 1, 3],
         'IsAlone': [1, 0, 0]
     })
 
+    expected_output_y = input_data["target"]
+
     # Call the function with the mocked input data
-    result = preprocess_data(input_data)
+    X, y = preprocess_data(input_data, target_column='target')
     
-    print(result)
     # Assert that the result matches the expected output
-    pd.testing.assert_frame_equal(result, expected_output)
+    pd.testing.assert_frame_equal(X, expected_output_X)
+    pd.testing.assert_series_equal(y, expected_output_y)
