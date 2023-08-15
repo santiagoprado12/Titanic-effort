@@ -179,7 +179,7 @@ Now you can train and validate the model with the new data using the commands de
     python3 -m src.CLI test -c
     ```
 
-Made with ❤️ and **titanic-effort** by Santiago Prado
+Made with ❤️ and a **titanic-effort** by Santiago Prado
 
 
 
