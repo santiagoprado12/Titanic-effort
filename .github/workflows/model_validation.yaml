@@ -1,0 +1,19 @@
+name: Continuous Validation and Training
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'folder/**'
+
+jobs:
+  ci_cd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: make install
+      - name: Run tests
+        run: . venv/bin/activate &&   python3 -m src.CLI validation -th 0.75
+      - name: Set 
