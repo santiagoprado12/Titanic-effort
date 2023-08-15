@@ -8,16 +8,16 @@ install: virtual_env
 	. $(VENV)/bin/activate && python3 -m pip install -r requirements.txt
 
 test: 
-	. $(VENV)/bin/activate && python3 -m pytest -v
+	. $(VENV)/bin/activate && python3 -m coverage run --omit '/usr/*' -m pytest -v
 
 test-coverage:
-	. $(VENV)/bin/activate && python3 -m coverage run -m pytest -v
+	. $(VENV)/bin/activate && python3 -m coverage run --omit '/usr/*' -m pytest -v
 	. $(VENV)/bin/activate && python3 -m coverage report
 
-coverage-html: test
+coverage-html:
 	. $(VENV)/bin/activate && python3 -m coverage html
 
-coverage-report: test
+coverage-report:
 	. $(VENV)/bin/activate && python3 -m coverage report
 
 dvc-pull-data:
@@ -25,6 +25,24 @@ dvc-pull-data:
 
 dvc-pull-model:
 	dvc pull -r model_remote
+
+dvc-push-train-data:
+	dvc unprotect 'data/train.csv'
+	dvc add 'data/train.csv' --to-remote -r data_remote
+	dvc push data/train.csv.dvc -r data_remote
+
+dvc-push-validation-data:
+	dvc unprotect 'data/validation.csv'
+	dvc add 'data/validation.csv' --to-remote -r data_remote
+	dvc push data/validation.csv.dvc -r data_remote
+
+dvc-push-data:
+	dvc unprotect 'data/train.csv'
+	dvc unprotect 'data/validation.csv'
+	dvc add 'data/train.csv' --to-remote -r data_remote
+	dvc add 'data/validation.csv' --to-remote -r data_remote
+	dvc push data/train.csv.dvc -r data_remote
+	dvc push data/validation.csv.dvc -r data_remote
 
 train:
 	make dvc-pull
