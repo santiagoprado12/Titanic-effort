@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 
 from sklearn.model_selection import train_test_split 
-from src.pipelines.model_trainig import ModelTraining
+from src.ml_pipelines.model_training import ModelTraining
 
+from src.utils.data_functions import *
 import logging
 
 
@@ -13,26 +14,17 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 
+def train(models_to_use: list, acc_threshold: float = 0.7) -> None:
+    """Train the models and save the best one locally
 
-def load_data(path: str) -> pd.DataFrame:
-    """Load data from a given path"""
-    return pd.read_csv(path)
+    Args:
+        models_to_use (list, optional): List of models to train.
+        acc_threshold (float, optional): Accuracy threshold to consider the model as good. Defaults to 0.7.
 
-
-def preprocess_data(data: pd.DataFrame) -> pd.DataFrame:
-    """Preprocess the data"""
-
-    titanic_data = data.copy()
-    titanic_data.drop(['Cabin', 'PassengerId', 'Name',
-                      'Ticket'], axis=1, inplace=True)
-    titanic_data['FamilySize'] = titanic_data['SibSp'] + titanic_data['Parch']
-    titanic_data['IsAlone'] = 0
-    titanic_data.loc[titanic_data['FamilySize'] == 0, 'IsAlone'] = 1
-
-    return titanic_data
-
-
-def main(models_to_use: list = ["random_forest", "gradient_boosting", "knn"], acc_threshold: float = 0.7) -> None:
+    
+    Raises:
+        AssertionError: If the best model is not good enough to be saved.
+    """
 
     RANDOM_SEED = 42
 
@@ -45,11 +37,7 @@ def main(models_to_use: list = ["random_forest", "gradient_boosting", "knn"], ac
 
     logger.info("Loading data")
     
-    titanic_data = load_data("data/train.csv")
-    titanic_data = preprocess_data(titanic_data)
-
-    X = titanic_data.drop(atributes_types["target"], axis=1)
-    y = titanic_data[atributes_types["target"]]
+    X, y = load_data("data/train.csv")
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.33, random_state=RANDOM_SEED)
@@ -67,12 +55,12 @@ def main(models_to_use: list = ["random_forest", "gradient_boosting", "knn"], ac
 
     assert scores[best_model_name] > acc_threshold, "The best model is not good enough, try with different hyperparams"
 
-    logger.info("Saving model")
+    logger.info("Saving model locally")
     model_train.save_model(best_model_name, "models/best_model.pkl")
 
 
 if __name__ == "__main__":
-    main()
+    train()
 
 
 
