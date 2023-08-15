@@ -2,6 +2,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
 from src.ml_pipelines.pipeline_connection import *
+from src.ml_pipelines.model_training import *
 from sklearn.dummy import DummyClassifier
 import pytest
 import os
