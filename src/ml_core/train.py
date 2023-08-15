@@ -27,6 +27,7 @@ def train(models_to_use: list, acc_threshold: float = 0.7) -> None:
     """
 
     RANDOM_SEED = 42
+    training_report = 'training_report.md'
 
     atributes_types = {
         'target': 'Survived',
@@ -45,7 +46,7 @@ def train(models_to_use: list, acc_threshold: float = 0.7) -> None:
     logger.info("Training models")
     
     model_train = ModelTraining(X_train, y_train, atributes_types, models_to_use)
-    model_train.train_models()
+    models = model_train.train_models()
 
     scores = model_train.generate_scores(X_test, y_test)
     logger.info(f"Scores: {scores}")
@@ -57,6 +58,10 @@ def train(models_to_use: list, acc_threshold: float = 0.7) -> None:
 
     logger.info("Saving model locally")
     model_train.save_model(best_model_name, "models/best_model.pkl")
+
+    generate_validation_report(models[best_model_name], X, y, training_report)
+
+    logger.info('Training report generated in %s', training_report)
 
 
 if __name__ == "__main__":
