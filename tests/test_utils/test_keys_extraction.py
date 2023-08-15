@@ -7,6 +7,9 @@ import os
 
 def test_get_secret_key_input(monkeypatch):
 
+    if "SECRET_KEY" in os.environ:
+       del os.environ["SECRET_KEY"]
+
     monkeypatch.setattr('builtins.input', lambda _: "input_string")
     key_extract = KeysExtraction()
 
