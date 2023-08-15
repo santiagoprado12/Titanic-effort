@@ -115,7 +115,7 @@ python3 -m src.CLI --help
 1. clone the repository:
 
    ```bash
-    git clone santiagoprado12/titanic_effort
+    git clone https://github.com/santiagoprado12/titanic_effort.git
     ```
 
 2. go to the project directory:
@@ -127,7 +127,7 @@ python3 -m src.CLI --help
 3. create a virtual environment and install the package:
 
     ```bash
-    make install && source .venv/bin/activate
+    make install && source venv/bin/activate
     ```
 
 4. set the environment variable for your secret key (optional):
@@ -142,7 +142,7 @@ python3 -m src.CLI --help
 1. Training a Model:
 
     ```bash
-    python3 -m src.CLI train -rm --model=knn --model=random_forest --model=gradient_boosting --model=svm -th=0.7
+    python3 -m src.CLI train -rm --model=knn --model=random_forest --model=gradient_boosting -th=0.7
     ```
     Feel free of adding more models to the list, change the grid parameters and search tecnique in the file `src/configs.py`.
 
