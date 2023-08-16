@@ -51,7 +51,7 @@ train:
 	python3 -m src.CLI train --model=knn --model=random_forest --model=gradient_boosting -th=0.7 -rm
 	
 train-git-actions:
-	python3 -m src.CLI train --model=knn --model=random_forest --model=gradient_boosting -th=0.7 -rm --git-actions
+	python3 -m src.CLI train --model=knn --model=gradient_boosting -th=0.7 -rm --git-actions
 
 upload_new_dataset:
 	dvc unprotect 'data/validation.csv'
