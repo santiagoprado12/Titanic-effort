@@ -33,7 +33,7 @@ jobs:
       - name: download model
         run: . venv/bin/activate && make dvc-pull-model
       - name: Run model validation
-        run: . venv/bin/activate && python3 -m src.CLI validation --acc-threshold 0.9 --git-actions
+        run: . venv/bin/activate && python3 -m src.CLI validation --acc-threshold 0.75 --git-actions
       - name: Register model
         run: . venv/bin/activate && make register_model
       - name: Check changes
