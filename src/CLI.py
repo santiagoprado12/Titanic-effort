@@ -9,6 +9,13 @@ import src.ml_core.validation as validation_model
 import os
 from src.configs import Configs
 
+from ruamel.yaml import YAML
+import great_expectations as gx
+from pprint import pprint
+
+yaml = YAML()
+context = gx.get_context()
+
 app = typer.Typer()  # Create a new typer.Typer() application.
 
 
@@ -65,29 +72,37 @@ def validation(threshold: float = typer.Option(None, "--acc-threshold", "-th", h
 def dataup(only_train: bool = typer.Option(False, "--only-train", "-t", help="only register the train data"),
            only_validation: bool = typer.Option(False, "--only-validation", "-v", help="only register the validation data")):
     """Update the data in the registry""" 
+    context = gx.get_context()
+    
+    data = ["data/train.csv", "data/validation.csv"]
+    data = ["data/train.csv"] if only_train else data
+    data = ["data/validation.csv"] if only_validation else data
 
-    if only_train:
-        if os.path.exists("data/train.csv"):
-            KeysExtraction().set_env_variables()
-            run_makefile("dvc-push-train-data")
-        else:
-            typer.echo("The train data does not exist. Please save the train (train.csv) data in the data folder and try again.")
-            raise typer.Abort()
+    gx_checkouts = {
+        "data/train.csv": "myckp_train",
+        "data/validation.csv": "myckp_validation"
+    }
 
-    elif only_validation:
-        if os.path.exists("data/validation.csv"):
-            KeysExtraction().set_env_variables()
-            run_makefile("dvc-push-validation-data")
-        else:
-            typer.echo("The validation data does not exist. Please save the validation (validation.csv) data in the data folder and try again.")
-            raise typer.Abort()
+    commands = {
+        "data/train.csv": "dvc-push-train-data",
+        "data/validation.csv": "dvc-push-validation-data"
+    }
 
-    else:
-        if os.path.exists("data/train.csv") and os.path.exists("data/validation.csv"):
-            KeysExtraction().set_env_variables()
-            run_makefile("dvc-push-data")
+    for data_path in data:
+        if os.path.exists(data_path):
+            res = context.run_checkpoint(checkpoint_name=gx_checkouts[data_path])
+
+            if res.success:
+                KeysExtraction().set_env_variables()
+                run_makefile(commands[data_path])
+            else:
+                val_id = list(res["run_results"].keys())[0]
+                details_url = res["run_results"][val_id]["actions_results"]["update_data_docs"]["local_site"]
+
+                typer.echo("The {} data does not pass the validation. Please check the data docs for more details: {}".format(data_path, details_url))
+                raise typer.Abort()
         else:
-            typer.echo("The train or validation data does not exist. Please save the train (train.csv) and validation (validation.csv) data in the data folder and try again.")
+            typer.echo("The {} data does not exist. Please save the {} data in the data folder and try again.".format(data_path, data_path.split("/")[1]))
             raise typer.Abort()
 
 
