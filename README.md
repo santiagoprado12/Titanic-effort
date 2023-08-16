@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Empower your machine learning journey with the **Titanic Model Trainer and Validator** package. This comprehensive package is tailored for model training, validation and deployment on the iconic Titanic dataset. By harnessing the power of Data Version Control (DVC) and embracing MLOps best practices, ensure absolute reproducibility and streamlined management of data and model versions. 
+This comprehensive package is tailored for model training, validation and deployment on the iconic Titanic dataset. By harnessing the power of Data Version Control (DVC) and embracing MLOps best practices, ensure absolute reproducibility and streamlined management of data and model versions. 
 
 ## Key Features
 
