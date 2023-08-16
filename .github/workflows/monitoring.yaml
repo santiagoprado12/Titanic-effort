@@ -1,4 +1,4 @@
-name: Continuous Integration and Continuous Deployment
+name: Continuous Monitoring and Training
 on:
   push:
     branches:
