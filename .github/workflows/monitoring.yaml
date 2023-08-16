@@ -25,6 +25,8 @@ jobs:
           aws-region: us-east-1
       - name: Install dependencies
         run: make install
+      - name: activate env
+        run: source venv/bin/activate
       - name: download data
         run: make dvc-pull-data
       - name: Run model validation
