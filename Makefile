@@ -62,5 +62,13 @@ register_model:
 upload_new_dataset-creds: 
 	python -m src.test
 
+create-docker-image:
+	aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 019994626350.dkr.ecr.us-east-2.amazonaws.com
+	docker build -t titanic-api .
+	docker tag titanic-api:latest 019994626350.dkr.ecr.us-east-2.amazonaws.com/titanic-api:latest
+	docker push 019994626350.dkr.ecr.us-east-2.amazonaws.com/titanic-api:latest
+
+
 dummy:
 	@echo "Doing nothing"
+
