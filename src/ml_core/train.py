@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 from src.ml_pipelines.model_training import ModelTraining
 
 from src.utils.data_functions import *
+
+from src.ml_pipelines.feature_selection import *
 import logging
 
 
@@ -37,6 +39,8 @@ def train(models_to_use: list, acc_threshold: float = 0.7) -> None:
     }
 
     logger.info("Loading data")
+
+    
     
     X, y = load_data("data/train.csv")
 
