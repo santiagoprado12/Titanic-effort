@@ -10,7 +10,7 @@ permissions:
   issues: read
   packages: none
 jobs:
-  Model validation:
+  Model_validation:
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
