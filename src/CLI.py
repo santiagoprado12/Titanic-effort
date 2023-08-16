@@ -14,8 +14,6 @@ import great_expectations as gx
 from pprint import pprint
 
 yaml = YAML()
-context = gx.get_context()
-
 app = typer.Typer()  # Create a new typer.Typer() application.
 
 
