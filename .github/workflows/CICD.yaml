@@ -3,13 +3,24 @@ on:
   push:
     branches:
       - main
-
+permissions:
+  id-token: write # need this for OIDC  
+  contents: write
+  pull-requests: write 
+  issues: read
+  packages: none
 jobs:
   ci_cd:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::019994626350:role/github-actions-rol
+          role-session-name: api-testing
+          aws-region: us-east-1
       - name: Install dependencies
         run: make install
       - name: download model
