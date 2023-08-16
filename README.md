@@ -183,6 +183,8 @@ Your data will be tested using **great expectations**, to guarantee the data qua
 
 ## Putting in Production the Model
 ### Model Inference Endpoint
+see the code [here](api/)
+
 The model inference endpoint is deployed on AWS App Runner. This means that the trained machine learning model is accessible via an API hosted on the provided URL: https://vp5ye3hgsu.us-east-2.awsapprunner.com/. Users can send requests to this endpoint to get predictions from the trained model.
 **Try it out!**
 
