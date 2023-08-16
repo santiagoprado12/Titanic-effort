@@ -50,7 +50,7 @@ titanic_effort/
 
 ### Data and Model Versioning
 
-I utilize DVC (Data Version Control) for managing dataset and model versions. This approach ensures reproducibility, traceability, and easy collaboration. The data is stored in the `data/` directory, while model is saved in the `models/` directory. DVC is integrated with AWS S3 to store and manage these versions remotely.
+DVC (Data Version Control) is used for managing dataset and model versions. This approach ensures reproducibility, traceability, and easy collaboration. The data is stored in the `data/` directory, while model is saved in the `models/` directory. DVC is integrated with AWS S3 to store and manage these versions remotely.
 
 ### Design Training and pipelines Process
 
@@ -145,7 +145,7 @@ python3 -m src.CLI --help
     ```bash
     python3 -m src.CLI train -rm --model=knn --model=random_forest --model=gradient_boosting -th=0.7
     ```
-    Feel free of adding more models to the list, change the grid parameters and search tecnique in the file `src/configs.py`.
+    Feel free of adding more models to the list, change the grid parameters and search tecnique in the file [`src/configs.py`](src/configs.py).
 
 2. Model Validation:
 
@@ -155,14 +155,14 @@ python3 -m src.CLI --help
 
 ### Update Data in the Registry
 
-1. Save the new data in the `data/` directory, as `train.csv` and `validation.csv`.
+1. Save the new data in the [data/](data/) directory, as [train.csv](train.csv)  and [validation.csv](validation.csv).
 
     ```bash
     cp <path_to_new_data>/train.csv data/train.csv
     cp <path_to_new_data>/validation.csv data/validation.csv
     ```
 
-    or you can simply copy and paste the data into the `data/` directory.
+    or you can simply copy and paste the data into the [data/](data/) directory.
 
 2. Update the data in the registry:
 
