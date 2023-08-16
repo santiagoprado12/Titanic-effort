@@ -12,6 +12,8 @@ permissions:
 jobs:
   ci_cd:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -27,3 +29,5 @@ jobs:
         run: . venv/bin/activate && make dvc-pull-model
       - name: Run tests
         run: . venv/bin/activate && python3 -m src.CLI test -c
+      - name: Build Docker image
+        run: make create-docker-image
