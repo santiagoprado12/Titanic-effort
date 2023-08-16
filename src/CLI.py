@@ -46,7 +46,7 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
         raise typer.Abort()
 
     if register:
-        if not git_actions:run_makefile("register_model")
+        run_makefile("register_model")
 
 
 @app.command()
@@ -64,7 +64,8 @@ def validation(threshold: float = typer.Option(None, "--acc-threshold", "-th", h
         if 0 <= threshold <= 1:
             if score < threshold:
                 typer.echo("The model is not good enough. training a new model.")
-                run_makefile("train-model")
+                if not git_actions: run_makefile("train-git-actions") 
+                if git_actions: run_makefile("train") 
         else:
             typer.echo("Invalid input. Please enter a float number between 0 and 1.")
             raise typer.Abort()
