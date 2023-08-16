@@ -215,7 +215,7 @@ This package has implemented data validation and model retraining to maintain mo
 
 ### ETL Pipeline
 
-This package hasn´t implemented an ETL pipeline, but it can be done using Airflow or AWS Step Functions. In order to extract the data from the source, transform it and load it into the registry. The importance of this is to have a reliable data source, and maintain updated the data in the registry.
+This package hasn´t implemented an ETL pipeline, but it can be done using Airflow or AWS Step Functions. In order to extract the data from the source, transform it and load it into the registry. The importance of this is to have a reliable data source, and maintain updated the training and validation data.
 
 
 
