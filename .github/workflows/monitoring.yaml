@@ -40,15 +40,10 @@ jobs:
             exit 0
           else
             echo "Changes detected in best_model.pkl.dvc"
+            git config --global user.email "santiagoprado12@gmail.com"
+            git config --global user.name "github-actions[bot]"
+            git add models/best_model.pkl.dvc
+            git commit -m "Updating model serialization"
+            git push origin main
             exit 1
           fi
-      - name: commit .dvc file changes
-        run: |
-          git config --global user.email "santiagoprado12@gmail.com"
-          git config --global user.name "github-actions[bot]"
-          git add models/best_model.pkl.dvc
-          git commit -m "Updating model serialization"
-      - uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{github.ref}}
