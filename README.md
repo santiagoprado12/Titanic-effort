@@ -192,7 +192,7 @@ But other tecnologies can be used to deploy the model, like AWS Lambda, AWS ECS,
 
 
 ### CI/CD with GitHub Actions
-see the code [here](.github/workflows/CICD.yml)
+see the code [here](.github/workflows/CICD.yaml)
 
 This project has a CI/CD setup using GitHub Actions. Here's a high-level overview of the process:
 
@@ -203,7 +203,7 @@ This project has a CI/CD setup using GitHub Actions. Here's a high-level overvie
 3. **App Runner Deployment:** The Docker image is pulled from ECR and deployed on AWS App Runner. This sets up the API endpoint, making the machine learning model accessible to users.
 
 ### Data Validation and Model Retraining
-see the code [here](.github/workflows/monitoring.yml)
+see the code [here](.github/workflows/monitoring.yaml)
 
 This package has implemented data validation and model retraining to maintain model accuracy:
 
