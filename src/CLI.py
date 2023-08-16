@@ -29,23 +29,24 @@ ModelType = create_enum("ModelType", model_type_list)
 @app.command()
 def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "--model", help="model to train")],
           register: bool = typer.Option(False, "--register-model", "-rm", help="register the trained model"),
-          threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for the model to be registered (between 0 and 1))")):
+          threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for the model to be registered (between 0 and 1))"),
+          git_actions: bool = typer.Option(False, "--git-actions", "-ga", help="is running from git actions?")):
     """Train the model"""
 
     if threshold is None:
         KeysExtraction().set_env_variables()
-        run_makefile("dvc-pull-data")
+        if not git_actions: run_makefile("dvc-pull-data")
         train_model.train([mod.value for mod in model])
     elif 0 <= threshold <= 1:
         KeysExtraction().set_env_variables()
-        run_makefile("dvc-pull-data")
+        if not git_actions: run_makefile("dvc-pull-data")
         train_model.train([mod.value for mod in model], threshold)
     else:
         typer.echo("Invalid input. Please enter a float number between 0 and 1.")
         raise typer.Abort()
 
     if register:
-        run_makefile("register_model")
+        if not git_actions:run_makefile("register_model")
 
 
 @app.command()
