@@ -1,8 +1,13 @@
 name: Continuous Integration and Continuous Deployment
 on:
   push:
+    paths-ignore:
+      - 'data/**'
     branches:
-      - main
+      - main  
+  workflow_run:
+    workflows: ["Continous Training"]
+    branches: [main]
 permissions:
   id-token: write # need this for OIDC  
   contents: write

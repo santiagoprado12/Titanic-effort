@@ -1,8 +1,9 @@
 name: Continuous Monitoring and Training
 on:
   push:
-    branches:
-      - main
+    branches: ['main']
+    paths: ['data/**']
+    
 permissions:
   id-token: write # need this for OIDC  
   contents: write
@@ -39,7 +40,7 @@ jobs:
         id: check_changes
         run: |
           git diff --name-only --exit-code | grep 'models/best_model.pkl.dvc' || echo "No changes detected"
-      - name: Check changes
+      - name: Push changes
         if: steps.check_changes.outputs.result != 'No changes detected'
         run: |
           echo "Changes detected in best_model.pkl.dvc"
