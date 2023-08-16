@@ -46,7 +46,7 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
         raise typer.Abort()
 
     if register:
-        run_makefile("register_model")
+        if not git_actions: run_makefile("register_model")
 
 
 @app.command()
