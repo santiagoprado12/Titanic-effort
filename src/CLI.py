@@ -49,12 +49,13 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
 
 
 @app.command()
-def validation(threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for retrain the model (between 0 and 1))")):
+def validation(threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for retrain the model (between 0 and 1))"),
+               git_actions: bool = typer.Option(False, "--git-actions", "-ga", help="is running from git actions?")):
     """Validate the model"""
 
     KeysExtraction().set_env_variables()
-    run_makefile("dvc-pull-data")
-    run_makefile("dvc-pull-model")
+    if not git_actions: run_makefile("dvc-pull-data")
+    if not git_actions: run_makefile("dvc-pull-model")
     score = validation_model.validate()
 
     if threshold is not None:
