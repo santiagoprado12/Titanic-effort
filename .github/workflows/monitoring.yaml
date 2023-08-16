@@ -37,15 +37,9 @@ jobs:
         run: . venv/bin/activate && make register_model
       - name: Check changes
         run: |
-          if git diff --quiet models/best_model.pkl.dvc; then
-            echo "No changes detected in best_model.pkl.dvc"
-            exit 0
-          else
-            echo "Changes detected in best_model.pkl.dvc"
-            git config --global user.email "santiagoprado12@gmail.com"
-            git config --global user.name "github-actions[bot]"
-            git add models/best_model.pkl.dvc
-            git commit -m "Updating model serialization"
-            git push origin main
-            exit 1
-          fi
+          echo "Changes detected in best_model.pkl.dvc"
+          git config --global user.email "santiagoprado12@gmail.com"
+          git config --global user.name "github-actions[bot]"
+          git add models/best_model.pkl.dvc
+          git commit -m "Updating model serialization"
+          git push origin main
