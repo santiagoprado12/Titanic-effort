@@ -205,7 +205,7 @@ This project has a CI/CD setup using GitHub Actions. Here's a high-level overvie
 ### Data Validation and Model Retraining
 see the code [here](.github/workflows/monitoring.yaml)
 
-This package has implemented data validation and model retraining to maintain model accuracy:
+This package has implemented in github actions a data validation and model retraining pipeline, in order to maintain the model accuracy:
 
 1. **Data quality check:** Before being uploaded to trhe registry, the data is validated using Great Expectations. This ensures that the incoming data adheres to the expected format and quality.
 
