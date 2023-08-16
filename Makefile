@@ -6,6 +6,7 @@ virtual_env:
 install: virtual_env
 	. $(VENV)/bin/activate && python3 -m pip install --upgrade pip
 	. $(VENV)/bin/activate && python3 -m pip install -r requirements.txt
+	. $(VENV)/bin/activate && python3 -m pip install -r api/requirements.txt
 
 test: 
 	. $(VENV)/bin/activate && python3 -m coverage run --omit '/usr/*' -m pytest -v
