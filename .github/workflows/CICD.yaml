@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::019994626350:role/github-actions-rol
           role-session-name: api-testing
