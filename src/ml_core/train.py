@@ -21,7 +21,7 @@ def train(models_to_use: list, acc_threshold: float = 0.7) -> None:
 
     Args:
         models_to_use (list, optional): List of models to train.
-        acc_threshold (float, optional): Accuracy threshold to consider the model as good. Defaults to 0.7.
+        acc_threshold (float, optional): Accuracy threshold to consider the model as good. Defaults to 0.7.}
 
     
     Raises:
@@ -40,8 +40,6 @@ def train(models_to_use: list, acc_threshold: float = 0.7) -> None:
 
     logger.info("Loading data")
 
-    
-    
     X, y = load_data("data/train.csv")
 
     X_train, X_test, y_train, y_test = train_test_split(

@@ -202,8 +202,8 @@ src/ml_pipelines/__init__.py                           3      0   100%
 src/ml_pipelines/feature_selection.py                 65      0   100%
 src/ml_pipelines/model_training.py                    29      7    76%
 src/ml_pipelines/pipeline_connection.py               54     10    81%
-src/utils/__init__.py                                  0      0   100%
-src/utils/data_functions.py                           49     23    53%
+src/utils/__init__.py                                  3      0   100%
+src/utils/data_functions.py                           49      3    94%
 src/utils/keys_extraction.py                          24      0   100%
 src/utils/utils.py                                     8      0   100%
 tests/__init__.py                                      0      0   100%
@@ -214,11 +214,11 @@ tests/test_pipelines/test_feature_selection.py        20      0   100%
 tests/test_pipelines/test_model_training.py           56      2    96%
 tests/test_pipelines/test_pipeline_connection.py      68      6    91%
 tests/test_utils/__init__.py                           0      0   100%
-tests/test_utils/test_data_functions.py               20      0   100%
+tests/test_utils/test_data_functions.py               30      0   100%
 tests/test_utils/test_keys_extraction.py              39      1    97%
 tests/test_utils/test_utils.py                         8      0   100%
 ----------------------------------------------------------------------
-TOTAL                                                519     49    91%
+TOTAL                                                532     29    95%
 ```
 ## Putting in Production the Model
 ### Model Inference Endpoint

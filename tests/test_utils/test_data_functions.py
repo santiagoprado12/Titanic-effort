@@ -1,6 +1,9 @@
 from src.utils.data_functions import *
 from unittest.mock import patch
+from sklearn.dummy import DummyClassifier
 import pandas as pd
+import numpy as np
+import os
 
 @patch('pandas.read_csv')
 def test_load_data(mock_read_csv, monkeypatch):
@@ -56,3 +59,21 @@ def test_preprocess_data():
     # Assert that the result matches the expected output
     pd.testing.assert_frame_equal(X, expected_output_X)
     pd.testing.assert_series_equal(y, expected_output_y)
+
+def test_generate_validation_report(tmpdir):
+
+    report = f"{tmpdir}/validation_report.md"
+
+    model = DummyClassifier().fit([1, 0, 1], [1, 1, 0])
+
+    X_train = pd.DataFrame({
+        'column1': [1,0,1]
+    })
+    X_test = pd.DataFrame({
+        'column1': [1,1,0]
+    })
+
+    generate_validation_report(model, X_train, X_test, report)
+
+    assert os.path.exists(report)
+
