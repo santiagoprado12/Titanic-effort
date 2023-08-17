@@ -54,7 +54,7 @@ DVC (Data Version Control) is used for managing dataset and model versions. This
 
 ### Design Training and pipelines Process
 
-I provide a Jupyter Notebook with the training process. You can access it [here](https://nbviewer.org/github/santiagoprado12/Titanic-effort/blob/dev/notebooks/preprocessing.ipynb).
+I provide a Jupyter Notebook with the training process. You can access it [here](https://nbviewer.org/github/santiagoprado12/titanic_effort/blob/main/notebooks/preprocessing.ipynb).
 
 
 ## CLI Overview
