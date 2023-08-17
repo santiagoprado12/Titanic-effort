@@ -15,13 +15,16 @@ from src.configs import Configs
 import os
 from ruamel.yaml import YAML
 import great_expectations as gx
-
+from art import *
 
 yaml = YAML()
 app = typer.Typer()  # Create a new typer.Typer() application.
 
 def create_enum(enum_name, values):
     return Enum(enum_name, {value: value for value in values})
+
+def print_title(title):
+    tprint(title, font='small')
 
 model_type_list = [model["name"] for model in Configs().models]
 ModelType = create_enum("ModelType", model_type_list)
@@ -33,6 +36,7 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
           threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for the model to be registered (between 0 and 1))"),
           git_actions: bool = typer.Option(False, "--git-actions", "-ga", help="is running from git actions?")):
     """Train the model"""
+    print_title("Training the model")
 
     if threshold is None:
         KeysExtraction().set_env_variables()
@@ -54,6 +58,7 @@ def train(model: Annotated[Optional[List[ModelType]], typer.Option(..., "-m", "-
 def validation(threshold: float = typer.Option(None, "--acc-threshold", "-th", help="accuracy threshold for retrain the model (between 0 and 1))"),
                git_actions: bool = typer.Option(False, "--git-actions", "-ga", help="is running from git actions?")):
     """Validate the model"""
+    print_title("Validating the model")
 
     KeysExtraction().set_env_variables()
     if not git_actions: run_makefile("dvc-pull-data")
@@ -76,6 +81,9 @@ def validation(threshold: float = typer.Option(None, "--acc-threshold", "-th", h
 def dataup(only_train: bool = typer.Option(False, "--only-train", "-t", help="only register the train data"),
            only_validation: bool = typer.Option(False, "--only-validation", "-v", help="only register the validation data")):
     """Update the data in the registry""" 
+
+    print_title("Updating data")
+
     context = gx.get_context()
     
     data = ["data/train.csv", "data/validation.csv"]
@@ -113,6 +121,7 @@ def dataup(only_train: bool = typer.Option(False, "--only-train", "-t", help="on
 @app.command()
 def test(coverage: bool = typer.Option(False, "--coverage", "-c", help="run the tests with coverage", show_default=False)):
     """Run the tests"""
+    print_title("Running the tests")
 
     if coverage:
         run_makefile("test-coverage")
