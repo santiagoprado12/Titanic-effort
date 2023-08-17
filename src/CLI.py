@@ -1,21 +1,24 @@
+# CLI library
 from enum import Enum
 from typing_extensions import Annotated
 from typing import List, Optional
 import typer
+
+# source code
 import src.ml_core.train as train_model
 from src.utils.keys_extraction import KeysExtraction
 from src.utils.utils import run_makefile
 import src.ml_core.validation as validation_model
-import os
 from src.configs import Configs
 
+# python libraries
+import os
 from ruamel.yaml import YAML
 import great_expectations as gx
-from pprint import pprint
+
 
 yaml = YAML()
 app = typer.Typer()  # Create a new typer.Typer() application.
-
 
 def create_enum(enum_name, values):
     return Enum(enum_name, {value: value for value in values})

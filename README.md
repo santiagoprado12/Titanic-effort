@@ -111,6 +111,12 @@ python3 -m src.CLI --help
 
 ##  **Quick Start Guide:**
 
+### Requirements
+
+1. python > 3.8
+
+2. make installed 
+
 ### Installation
 
 1. clone the repository:
