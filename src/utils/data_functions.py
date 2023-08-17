@@ -27,17 +27,13 @@ def generate_validation_report(model, X_test, y_test, output_file='validation_re
         None
     """
 
-    # Make predictions on the test set
     y_pred = model.predict(X_test)
 
-    # Calculate confusion matrix and classification report
     conf_matrix = confusion_matrix(y_test, y_pred)
     class_report = classification_report(y_test, y_pred)
 
-    # Create a DataFrame for the confusion matrix
     conf_matrix_df = pd.DataFrame(conf_matrix, index=['Actual Dead', 'Actual Survive'], columns=['Predicted Dead', 'Predicted Survive'])
 
-    # Plot the confusion matrix
     plt.figure(figsize=(8, 6))
     plt.title('Confusion Matrix')
     plt.xlabel('Predicted')
@@ -49,12 +45,11 @@ def generate_validation_report(model, X_test, y_test, output_file='validation_re
 
     datetime = pd.Timestamp.now().strftime(format='%Y%m%d_%H%M%S')
 
-    # Save the confusion matrix plot
     conf_matrix_plot_file = f'confusion_matrix_{datetime}.png'
     plt.savefig(conf_matrix_plot_file)
     plt.close()
 
-    # Create the Markdown report
+
     markdown_content = f"""
 # Validation Report
 
@@ -71,7 +66,6 @@ def generate_validation_report(model, X_test, y_test, output_file='validation_re
 ```
     """
 
-    # Write the Markdown report to the output file
     with open(output_file, 'w') as f:
         f.write(markdown_content)
 
@@ -81,6 +75,15 @@ def generate_validation_report(model, X_test, y_test, output_file='validation_re
 
 
 def preprocess_features(data: pd.DataFrame) -> pd.DataFrame:
+    """Preprocess the features
+    Its importat that the data has those columns:
+        - Cabin
+        - PassengerId
+        - Name
+        - Ticket
+        - SibSp
+        - Parch
+    """
 
     titanic_data = data.copy()
     titanic_data.drop(['Cabin', 'PassengerId', 'Name',
@@ -94,13 +97,12 @@ def preprocess_features(data: pd.DataFrame) -> pd.DataFrame:
 
 def preprocess_data(data: pd.DataFrame, target_column: str) -> pd.DataFrame:
     """Preprocess the data
-    Its importat that the data has those columns:
-        - Cabin
-        - PassengerId
-        - Name
-        - Ticket
-        - SibSp
-        - Parch
+    Args:
+        data (pd.DataFrame): Data to preprocess.
+        target_column (str): Name of the target column.
+
+    Returns:
+        pd.DataFrame: Preprocessed data.
     """
 
     titanic_data = preprocess_features(data)
