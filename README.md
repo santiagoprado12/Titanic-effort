@@ -143,7 +143,7 @@ python3 -m src.CLI --help
     export SECRET_KEY=<your_secret_key>
     ```
 
-### Train and Validate a Models
+### Train and Validate the Models
 
 
 1. Training a Model:
